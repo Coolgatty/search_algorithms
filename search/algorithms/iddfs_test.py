@@ -64,7 +64,7 @@ def test_solution():
     assert path is not None
 
     # And it should be optimal.
-    assert path.cost() == 17
+    assert path.cost() == 19
 
     # The map is more than completely expanded.
     assert iddfs.expansions > 21

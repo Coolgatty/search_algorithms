@@ -199,7 +199,8 @@ def test_heuristic_single_tile_off():
 
     assert len(problem.starting_states) == 1
     for start in problem.starting_states:
-        h_values = [h(start) for h in problem.all_heuristics()]
+        heuristics = [hc(problem) for hc in problem.all_heuristics()]
+        h_values = [h(start) for h in heuristics]
         assert h_values == [1, 0]
 
 
@@ -220,4 +221,4 @@ def test_heuristic_reversed_tiles():
     assert len(problem.starting_states) == 1
     for start in problem.starting_states:
         h_values = [h(start) for h in problem.all_heuristics()]
-        assert h_values == [24, 0]
+        assert h_values == [20, 0]
