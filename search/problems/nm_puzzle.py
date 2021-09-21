@@ -282,7 +282,15 @@ class NMPuzzleManhattanDistance(Heuristic):
         assert self.problem.goal_states, "Some goal states must be defined."
 
         # TODO: Implement the NMPuzzle Manhattan Distance heuristic.
-        return 0
+        h = 0
+        for i, value in enumerate(state.grid):
+            for j, number in enumerate(value):
+                if (number == state.grid.size - 1):
+                    continue
+                index = state.grid[i][j]
+                pos = self.goal_number_coordinates[0][index]
+                h += (abs(pos[0] - j) + abs(pos[1] - i))
+        return h
 
 
 def build_goal_state(height: int, width: int) -> NMPuzzle.State:

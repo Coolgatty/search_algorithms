@@ -185,7 +185,7 @@ def test_spin():
     ]
 
 
-@pytest.mark.skip(reason="NMPuzzleManhattanDistance is not implemented yet.")
+# @pytest.mark.skip(reason="NMPuzzleManhattanDistance is not implemented yet.")
 def test_heuristic_single_tile_off():
     metaproblem = NMPuzzleMetaProblem(
         np.array(
@@ -204,7 +204,7 @@ def test_heuristic_single_tile_off():
         assert h_values == [1, 0]
 
 
-@pytest.mark.skip(reason="NMPuzzleManhattanDistance is not implemented yet.")
+# @pytest.mark.skip(reason="NMPuzzleManhattanDistance is not implemented yet.")
 def test_heuristic_reversed_tiles():
     metaproblem = NMPuzzleMetaProblem(
         np.array(
@@ -220,5 +220,6 @@ def test_heuristic_reversed_tiles():
 
     assert len(problem.starting_states) == 1
     for start in problem.starting_states:
-        h_values = [h(start) for h in problem.all_heuristics()]
+        heuristics = [hc(problem) for hc in problem.all_heuristics()]
+        h_values = [h(start) for h in heuristics]
         assert h_values == [20, 0]
