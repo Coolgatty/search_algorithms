@@ -285,11 +285,16 @@ class NMPuzzleManhattanDistance(Heuristic):
         h = 0
         for i, value in enumerate(state.grid):
             for j, number in enumerate(value):
-                if (number == state.grid.size - 1):
+                if number == state.grid.size - 1:
                     continue
                 index = state.grid[i][j]
-                pos = self.goal_number_coordinates[0][index]
-                h += (abs(pos[0] - j) + abs(pos[1] - i))
+                pos = min(
+                    [
+                        self.goal_number_coordinates[k][index]
+                        for k in range(len(self.goal_number_coordinates))
+                    ]
+                )
+                h += abs(pos[0] - j) + abs(pos[1] - i)
         return h
 
 

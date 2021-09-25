@@ -141,6 +141,7 @@ def test_heuristic_no_goal():
         assert problem._eval_heuristics(start) == {
             "SokobanBetterDistance": INFINITY,
             "SokobanSimpleManhattanDistance": INFINITY,
+            "SokobanSimpleManhattanActionDistance": INFINITY,
             "SokobanMisplacedBoxes": INFINITY,
             "SokobanDiscreteMetric": 0,
             "Heuristic": 0,
@@ -161,11 +162,33 @@ def test_heuristic_single_goal():
         assert problem._eval_heuristics(start) == {
             "SokobanBetterDistance": 0,
             "SokobanSimpleManhattanDistance": 0,
+            "SokobanSimpleManhattanActionDistance": 0,
             "SokobanMisplacedBoxes": 0,
             "SokobanDiscreteMetric": 0,
             "Heuristic": 0,
         }
 
+
+def test_single_box_and_goal():
+    metaproblem = SokobanMetaProblem(
+        [
+            "S BG",
+        ]
+    )
+    problem: Problem = next(iter(metaproblem.multi_goal_given()))
+
+    assert len(problem.starting_states) == 1
+    for start in problem.starting_states:
+        # pylint: protected-access
+        assert problem._eval_heuristics(start) == {
+            "SokobanBetterDistance": 3,
+            "SokobanSimpleManhattanDistance": 1,
+            "SokobanSimpleManhattanActionDistance": 3,
+            "SokobanMisplacedBoxes": 1,
+            "SokobanDiscreteMetric": 1,
+            "Heuristic": 0,
+            
+        }
 
 def test_heuristic_multi_goal():
     metaproblems = [
@@ -193,7 +216,160 @@ def test_heuristic_multi_goal():
                 assert problem._eval_heuristics(start) == {
                     "SokobanBetterDistance": 0,
                     "SokobanSimpleManhattanDistance": 0,
+                    "SokobanSimpleManhattanActionDistance": 0,
                     "SokobanMisplacedBoxes": 0,
                     "SokobanDiscreteMetric": 0,
+                    "Heuristic": 0,
+                }
+
+
+def test_heuristic_multi_goal_with_box_1():
+    metaproblems = [
+        SokobanMetaProblem(
+            [
+                "                 G",
+                " S         B      ",
+                "G                 ",
+            ]
+        ),
+    ]
+
+    for metaproblem in metaproblems:
+        for problem in metaproblem.multi_goal_given():
+            assert len(problem.starting_states) == 1
+            for start in problem.starting_states:
+                # pylint: protected-access
+                assert problem._eval_heuristics(start) == {
+                    "SokobanBetterDistance": 19,
+                    "SokobanSimpleManhattanDistance": 7,
+                    "SokobanSimpleManhattanActionDistance": 17,
+                    "SokobanMisplacedBoxes": 1,
+                    "SokobanDiscreteMetric": 1,
+                    "Heuristic": 0,
+                }
+
+def test_heuristic_multi_goal_with_box_2():
+    metaproblems = [
+        SokobanMetaProblem(
+            [
+                "                 G",
+                "  S G             ",
+                "      B           ",
+            ]
+        ),
+    ]
+
+    for metaproblem in metaproblems:
+        for problem in metaproblem.multi_goal_given():
+            assert len(problem.starting_states) == 1
+            for start in problem.starting_states:
+                # pylint: protected-access
+                assert problem._eval_heuristics(start) == {
+                    "SokobanBetterDistance": 12,
+                    "SokobanSimpleManhattanDistance": 3,
+                    "SokobanSimpleManhattanActionDistance": 8,
+                    "SokobanMisplacedBoxes": 1,
+                    "SokobanDiscreteMetric": 1,
+                    "Heuristic": 0,
+                }
+
+
+def test_heuristic_multi_goal_with_box_3():
+    metaproblems = [
+        SokobanMetaProblem(
+            [
+                "                 G",
+                "  S G B           ",
+                "                  ",
+            ]
+        ),
+    ]
+
+    for metaproblem in metaproblems:
+        for problem in metaproblem.multi_goal_given():
+            assert len(problem.starting_states) == 1
+            for start in problem.starting_states:
+                # pylint: protected-access
+                assert problem._eval_heuristics(start) == {
+                    "SokobanBetterDistance": 10,
+                    "SokobanSimpleManhattanDistance": 2,
+                    "SokobanSimpleManhattanActionDistance": 6,
+                    "SokobanMisplacedBoxes": 1,
+                    "SokobanDiscreteMetric": 1,
+                    "Heuristic": 0,
+                }
+
+def test_heuristic_multi_goal_with_box_4():
+    metaproblems = [
+        SokobanMetaProblem(
+            [
+                "         S        ",
+                "    B        G    ",
+                "                 G",
+            ]
+        ),
+    ]
+
+    for metaproblem in metaproblems:
+        for problem in metaproblem.multi_goal_given():
+            assert len(problem.starting_states) == 1
+            for start in problem.starting_states:
+                # pylint: protected-access
+                assert problem._eval_heuristics(start) == {
+                    "SokobanBetterDistance": 17,
+                    "SokobanSimpleManhattanDistance": 9,
+                    "SokobanSimpleManhattanActionDistance": 15,
+                    "SokobanMisplacedBoxes": 1,
+                    "SokobanDiscreteMetric": 1,
+                    "Heuristic": 0,
+                }
+
+def test_heuristic_multi_goal_with_box_5():
+    metaproblems = [
+        SokobanMetaProblem(
+            [
+                "         S        ",
+                "    B             ",
+                "              G  G",
+            ]
+        ),
+    ]
+
+    for metaproblem in metaproblems:
+        for problem in metaproblem.multi_goal_given():
+            assert len(problem.starting_states) == 1
+            for start in problem.starting_states:
+                # pylint: protected-access
+                assert problem._eval_heuristics(start) == {
+                    "SokobanBetterDistance": 21,
+                    "SokobanSimpleManhattanDistance": 11,
+                    "SokobanSimpleManhattanActionDistance": 17,
+                    "SokobanMisplacedBoxes": 1,
+                    "SokobanDiscreteMetric": 1,
+                    "Heuristic": 0,
+                }
+
+def test_multi_box():
+    metaproblems = [
+        SokobanMetaProblem(
+            [
+                "S        B     B  ",
+                "         G     G  ",
+                "                  ",
+            ]
+        ),
+    ]
+
+    for metaproblem in metaproblems:
+        for problem in metaproblem.multi_goal_given():
+            assert len(problem.starting_states) == 1
+            for start in problem.starting_states:
+                # pylint: protected-access
+                assert problem._eval_heuristics(start) == {
+                    "SokobanBetterDistance": 21,
+                    "SokobanSimpleManhattanDistance": 2,
+                    "SokobanSimpleManhattanActionDistance": 17,
+                    "SokobanMisplacedBoxes": 2,
+                    "SokobanDiscreteMetric": 1,
                     "Heuristic": 0,
                 }

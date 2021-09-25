@@ -12,7 +12,7 @@ from search.problems.grid.board2d import Grid2DMetaProblem
 from search.space import Problem
 
 
-@pytest.mark.skip(reason="IDDFS is not implemented yet.")
+#@pytest.mark.skip(reason="IDDFS is not implemented yet.")
 def test_no_solution():
     metaproblem = Grid2DMetaProblem(
         [
@@ -38,7 +38,7 @@ def test_no_solution():
     assert 10_000 < iddfs.time_ns < 10_000_000
 
 
-@pytest.mark.skip(reason="IDDFS is not implemented yet.")
+#@pytest.mark.skip(reason="IDDFS is not implemented yet.")
 def test_solution():
     metaproblem = Grid2DMetaProblem(
         [
@@ -72,7 +72,7 @@ def test_solution():
     assert 100_000 < iddfs.time_ns < 10_000_000
 
 
-@pytest.mark.skip(reason="IDDFS is not implemented yet.")
+#@pytest.mark.skip(reason="IDDFS is not implemented yet.")
 def test_expansion_order():
     length = 100
     metaproblem = Grid2DMetaProblem(
