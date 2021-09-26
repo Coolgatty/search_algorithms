@@ -176,14 +176,19 @@ def test_single_box_and_goal():
         ]
     )
     problem: Problem = next(iter(metaproblem.multi_goal_given()))
+    bfs: SearchAlgorithm = BFS(problem)
 
+    # Search
+    goal_node: Optional[Node] = bfs.search()
+    assert goal_node is not None
+    path = goal_node.path(problem.space)
     assert len(problem.starting_states) == 1
     for start in problem.starting_states:
         # pylint: protected-access
         assert problem._eval_heuristics(start) == {
-            "SokobanBetterDistance": 3,
+            "SokobanBetterDistance": path.cost(),
             "SokobanSimpleManhattanDistance": 1,
-            "SokobanSimpleManhattanActionDistance": 3,
+            "SokobanSimpleManhattanActionDistance": 2,
             "SokobanMisplacedBoxes": 1,
             "SokobanDiscreteMetric": 1,
             "Heuristic": 0,
@@ -236,13 +241,19 @@ def test_heuristic_multi_goal_with_box_1():
 
     for metaproblem in metaproblems:
         for problem in metaproblem.multi_goal_given():
+            bfs: SearchAlgorithm = BFS(problem)
+
+            # Search
+            goal_node: Optional[Node] = bfs.search()
+            assert goal_node is not None
+            path = goal_node.path(problem.space)
             assert len(problem.starting_states) == 1
             for start in problem.starting_states:
                 # pylint: protected-access
                 assert problem._eval_heuristics(start) == {
-                    "SokobanBetterDistance": 19,
+                    "SokobanBetterDistance": path.cost(),
                     "SokobanSimpleManhattanDistance": 7,
-                    "SokobanSimpleManhattanActionDistance": 17,
+                    "SokobanSimpleManhattanActionDistance": 16,
                     "SokobanMisplacedBoxes": 1,
                     "SokobanDiscreteMetric": 1,
                     "Heuristic": 0,
@@ -252,22 +263,30 @@ def test_heuristic_multi_goal_with_box_2():
     metaproblems = [
         SokobanMetaProblem(
             [
+                "                  ",
                 "                 G",
                 "  S G             ",
                 "      B           ",
+                "                  ",
             ]
         ),
     ]
 
     for metaproblem in metaproblems:
         for problem in metaproblem.multi_goal_given():
+            bfs: SearchAlgorithm = BFS(problem)
+
+            # Search
+            goal_node: Optional[Node] = bfs.search()
+            assert goal_node is not None
+            path = goal_node.path(problem.space)
             assert len(problem.starting_states) == 1
             for start in problem.starting_states:
                 # pylint: protected-access
                 assert problem._eval_heuristics(start) == {
-                    "SokobanBetterDistance": 12,
+                    "SokobanBetterDistance": path.cost(),
                     "SokobanSimpleManhattanDistance": 3,
-                    "SokobanSimpleManhattanActionDistance": 8,
+                    "SokobanSimpleManhattanActionDistance": 7,
                     "SokobanMisplacedBoxes": 1,
                     "SokobanDiscreteMetric": 1,
                     "Heuristic": 0,
@@ -287,13 +306,19 @@ def test_heuristic_multi_goal_with_box_3():
 
     for metaproblem in metaproblems:
         for problem in metaproblem.multi_goal_given():
+            bfs: SearchAlgorithm = BFS(problem)
+
+            # Search
+            goal_node: Optional[Node] = bfs.search()
+            assert goal_node is not None
+            path = goal_node.path(problem.space)
             assert len(problem.starting_states) == 1
             for start in problem.starting_states:
                 # pylint: protected-access
                 assert problem._eval_heuristics(start) == {
-                    "SokobanBetterDistance": 10,
+                    "SokobanBetterDistance": path.cost(),
                     "SokobanSimpleManhattanDistance": 2,
-                    "SokobanSimpleManhattanActionDistance": 6,
+                    "SokobanSimpleManhattanActionDistance": 5,
                     "SokobanMisplacedBoxes": 1,
                     "SokobanDiscreteMetric": 1,
                     "Heuristic": 0,
@@ -312,13 +337,19 @@ def test_heuristic_multi_goal_with_box_4():
 
     for metaproblem in metaproblems:
         for problem in metaproblem.multi_goal_given():
+            bfs: SearchAlgorithm = BFS(problem)
+
+            # Search
+            goal_node: Optional[Node] = bfs.search()
+            assert goal_node is not None
+            path = goal_node.path(problem.space)
             assert len(problem.starting_states) == 1
             for start in problem.starting_states:
                 # pylint: protected-access
                 assert problem._eval_heuristics(start) == {
-                    "SokobanBetterDistance": 17,
+                    "SokobanBetterDistance": path.cost(),
                     "SokobanSimpleManhattanDistance": 9,
-                    "SokobanSimpleManhattanActionDistance": 15,
+                    "SokobanSimpleManhattanActionDistance": 14,
                     "SokobanMisplacedBoxes": 1,
                     "SokobanDiscreteMetric": 1,
                     "Heuristic": 0,
@@ -337,39 +368,80 @@ def test_heuristic_multi_goal_with_box_5():
 
     for metaproblem in metaproblems:
         for problem in metaproblem.multi_goal_given():
+            bfs: SearchAlgorithm = BFS(problem)
+
+            # Search
+            goal_node: Optional[Node] = bfs.search()
+            assert goal_node is not None
+            path = goal_node.path(problem.space)
+
             assert len(problem.starting_states) == 1
             for start in problem.starting_states:
                 # pylint: protected-access
                 assert problem._eval_heuristics(start) == {
-                    "SokobanBetterDistance": 21,
+                    "SokobanBetterDistance": path.cost(),
                     "SokobanSimpleManhattanDistance": 11,
-                    "SokobanSimpleManhattanActionDistance": 17,
+                    "SokobanSimpleManhattanActionDistance": 16,
                     "SokobanMisplacedBoxes": 1,
                     "SokobanDiscreteMetric": 1,
                     "Heuristic": 0,
                 }
 
-def test_multi_box():
+def test_heuristic_multi_box():
     metaproblems = [
         SokobanMetaProblem(
             [
+                "                  ",
                 "S        B     B  ",
                 "         G     G  ",
-                "                  ",
             ]
         ),
     ]
 
     for metaproblem in metaproblems:
         for problem in metaproblem.multi_goal_given():
+            bfs: SearchAlgorithm = BFS(problem)
+
+            # Search
+            goal_node: Optional[Node] = bfs.search()
+            assert goal_node is not None
+            path = goal_node.path(problem.space)
             assert len(problem.starting_states) == 1
             for start in problem.starting_states:
                 # pylint: protected-access
                 assert problem._eval_heuristics(start) == {
-                    "SokobanBetterDistance": 21,
+                    "SokobanBetterDistance": path.cost(),
                     "SokobanSimpleManhattanDistance": 2,
-                    "SokobanSimpleManhattanActionDistance": 17,
+                    "SokobanSimpleManhattanActionDistance": 15,
                     "SokobanMisplacedBoxes": 2,
                     "SokobanDiscreteMetric": 1,
                     "Heuristic": 0,
                 }
+
+def test_heuristics_optimal_multi_box():
+    metaproblem = SokobanMetaProblem(
+        [
+            "      G           ",
+            "  S          B    ",
+            "                  ",
+        ]
+    )
+    problem: Problem = next(iter(metaproblem.multi_goal_given()))
+    bfs: SearchAlgorithm = BFS(problem)
+
+    # Search
+    goal_node: Optional[Node] = bfs.search()
+
+    # There's a solution
+    assert goal_node is not None
+    # This is not so easy
+    #assert 10 < bfs.expansions < 40
+
+    # We can get its path
+    path = goal_node.path(problem.space)
+    assert path.cost() == 22
+
+    assert len(problem.starting_states) == 1
+    for start in problem.starting_states:
+        # pylint: protected-access
+        assert problem._eval_heuristics(start)["SokobanBetterDistance"] == path.cost()

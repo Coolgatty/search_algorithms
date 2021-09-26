@@ -390,7 +390,7 @@ class SokobanSimpleManhattanActionDistance(Heuristic):
             for goal_pos in self.problem.goal_positions:
                 distance = abs(box_pos[0] - goal_pos[0]) + abs(box_pos[1] - goal_pos[1])
                 distances.append(distance)
-            action_distance = abs(box_pos[0] - agent_pos[0]) + abs(box_pos[1] - agent_pos[1])
+            action_distance = abs(box_pos[0] - agent_pos[0]) + abs(box_pos[1] - agent_pos[1]) - 1
             h += min(distances) + action_distance
             agent_pos = box_pos
         return h
@@ -413,21 +413,25 @@ class SokobanBetterDistance(Heuristic):
             distances = []
             for goal_pos in self.problem.goal_positions:
                 distance = abs(box_pos[0] - goal_pos[0]) + abs(box_pos[1] - goal_pos[1])
-                # direction_cost corrects the direction from which the agent must move the box
+                # direction_cost corrects distance with the direction from which the agent must move the box
                 direction_cost = 0
                 agent_box_vector = (agent_pos[0] - box_pos[0], agent_pos[1] - box_pos[1])
                 agent_goal_vector = (agent_pos[0] - goal_pos[0], agent_pos[1] - goal_pos[1])
-                if agent_box_vector[0] ^ agent_goal_vector[0] < 0 or agent_box_vector[1] ^ agent_goal_vector[1] < 0:
-                    direction_cost += 4
-                    if agent_box_vector[0] == agent_goal_vector[0] or agent_box_vector[1] == agent_goal_vector[1]:
-                        direction_cost -= 2
+                if agent_box_vector[0] ^ agent_goal_vector[0] < 0 and -agent_box_vector[0] ^ -agent_goal_vector[0] < 0:
+                    direction_cost += 2
+                    if agent_box_vector[1] == 0 and agent_goal_vector[1] == 0:
+                        direction_cost += 2
+                elif agent_box_vector[1] ^ agent_goal_vector[1] < 0 and -agent_box_vector[1] ^ -agent_goal_vector[1] < 0:
+                    direction_cost += 2
+                    if agent_box_vector[0] == 0 and agent_goal_vector[0] == 0:
+                        direction_cost += 2
                 elif abs(agent_box_vector[0]) > abs(agent_goal_vector[0]) or abs(agent_box_vector[1]) > abs(agent_goal_vector[1]):
                     direction_cost += 4
-                elif agent_box_vector[0] != agent_goal_vector[0] and agent_box_vector[1] != agent_goal_vector[1]:
+                elif (agent_box_vector[0] == 0 and agent_goal_vector[0] != 0) or (agent_box_vector[1] == 0 and agent_goal_vector[1] != 0):
                     direction_cost += 2
                 distance += direction_cost
                 distances.append(distance)
-            action_distance = abs(box_pos[0] - agent_pos[0]) + abs(box_pos[1] - agent_pos[1])
+            action_distance = abs(box_pos[0] - agent_pos[0]) + abs(box_pos[1] - agent_pos[1]) - 1
             h += min(distances) + action_distance
             agent_pos = box_pos
         return h
