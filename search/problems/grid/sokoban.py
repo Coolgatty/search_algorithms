@@ -417,6 +417,7 @@ class SokobanBetterDistance(Heuristic):
                 direction_cost = 0
                 agent_box_vector = (agent_pos[0] - box_pos[0], agent_pos[1] - box_pos[1])
                 agent_goal_vector = (agent_pos[0] - goal_pos[0], agent_pos[1] - goal_pos[1])
+                box_goal_vector = (agent_box_vector[0] - agent_goal_vector[0], agent_box_vector[1] - agent_goal_vector[1])
                 if agent_box_vector[0] ^ agent_goal_vector[0] < 0 and -agent_box_vector[0] ^ -agent_goal_vector[0] < 0:
                     direction_cost += 2
                     if agent_box_vector[1] == 0 and agent_goal_vector[1] == 0:
@@ -425,8 +426,14 @@ class SokobanBetterDistance(Heuristic):
                     direction_cost += 2
                     if agent_box_vector[0] == 0 and agent_goal_vector[0] == 0:
                         direction_cost += 2
-                elif abs(agent_box_vector[0]) > abs(agent_goal_vector[0]) or abs(agent_box_vector[1]) > abs(agent_goal_vector[1]):
+                elif abs(agent_box_vector[0]) > abs(agent_goal_vector[0]):
                     direction_cost += 4
+                    if agent_box_vector[1] - box_goal_vector[1] < agent_box_vector[1]:
+                        direction_cost -= 2
+                elif abs(agent_box_vector[1]) > abs(agent_goal_vector[1]):
+                    direction_cost += 4
+                    if agent_box_vector[0] - box_goal_vector[0] < agent_box_vector[0]:
+                        direction_cost -= 2
                 elif (agent_box_vector[0] == 0 and agent_goal_vector[0] != 0) or (agent_box_vector[1] == 0 and agent_goal_vector[1] != 0):
                     direction_cost += 2
                 distance += direction_cost
