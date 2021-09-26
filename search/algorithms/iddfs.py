@@ -10,12 +10,13 @@ from search.algorithms.dfs import DFS
 import time
 from math import sqrt, pi
 
+
 class IDDFS(DFS):
     """Iterative deepening Depth-first Search."""
 
     def __init__(self, problem):
         super().__init__(problem)
-        self.max_expansions = 2**64
+        self.max_expansions = 2 ** 64
 
     def __str__(self) -> str:
         """The string representation of this Node."""
@@ -81,7 +82,7 @@ class IDDFS(DFS):
             if state in self.closed:
                 # Déjà vu, we reached an expanded state.
                 continue  # Not falling for this (again?).
-            #print(self.states_reached, self.max_states)
+            # print(self.states_reached, self.max_states)
             self.states_reached += 1
             self.reach(state, action, parent=node)
             result = self._actually_search(depth)

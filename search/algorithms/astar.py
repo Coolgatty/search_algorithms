@@ -9,11 +9,11 @@ from typing import Dict, Optional
 
 from data_structures.intrusive_heap import IntrusiveHeap
 
-from search.algorithms.search import Node, SearchAlgorithm
-from search.space import Space
+from search.algorithms.search import HeuristicSearchAlgorithm, Node, SearchAlgorithm
+from search.space import Heuristic, Problem, Space
 
 
-class AStar(SearchAlgorithm):
+class AStar(HeuristicSearchAlgorithm):
     """A* Search Algorithm
 
     Implements Open with an intrusive Heap.
@@ -42,6 +42,7 @@ class AStar(SearchAlgorithm):
             action: Optional[Space.Action],
             parent: Optional[Node],
             g,
+            h,
         ):
             Node.__init__(self, state, action, parent)
             IntrusiveHeap.Node.__init__(self)
@@ -49,6 +50,9 @@ class AStar(SearchAlgorithm):
             # pylint: disable=invalid-name
             assert g >= 0
             self.g = g
+
+            assert h >= 0
+            self.h = h
 
         # search.Node
         # -----------
@@ -59,15 +63,17 @@ class AStar(SearchAlgorithm):
             if self.parent:
                 parent_action = str(self.action)
                 parent_state = str(self.parent.state)
-            return "AStarNode[s={}, a={}, p.s={}, g={}]".format(
-                self.state, parent_action, parent_state, self.g
+            return "AStarNode[s={}, a={}, p.s={}, g={}, h={}]".format(
+                self.state, parent_action, parent_state, self.g, self.h
             )
 
         # IntrusiveHeap.Node
         # ------------------
         def __lt__(self, other) -> bool:
             """Compares the cost of reaching the nodes."""
-            return self.g < other.g
+            if self.g + self.h == other.g + other.h:
+                return self.g > other.g or self.h < other.h
+            return self.g + self.h < other.g + other.h
 
     class Open(SearchAlgorithm.Open):
         """An Open set implementation using an intrusive Heap."""
@@ -115,6 +121,9 @@ class AStar(SearchAlgorithm):
             """
             self.heap.sync_improvement(node)
 
+    def __init__(self, problem: Problem, heuristic: Heuristic):
+        super().__init__(problem, heuristic)
+
     @classmethod
     def name(cls) -> str:
         """Returns the name of the Algorithm."""
@@ -128,7 +137,7 @@ class AStar(SearchAlgorithm):
     def create_starting_node(self, state: Space.State) -> Node:
         """Create an Starting Node."""
         self.nodes_created += 1
-        return AStar.AStarNode(state, action=None, parent=None, g=0)
+        return AStar.AStarNode(state, action=None, parent=None, g=0, h=self.h(state))
 
     def reach(self, state: Space.State, action: Space.Action, parent: Node):
         """Reaches a state and updates Open."""
@@ -140,7 +149,11 @@ class AStar(SearchAlgorithm):
 
         if state not in self.open:
             self.nodes_created += 1
-            self.open.insert(AStar.AStarNode(state, action=action, parent=parent, g=g))
+            self.open.insert(
+                AStar.AStarNode(
+                    state, action=action, parent=parent, g=g, h=self.h(state)
+                )
+            )
             return
 
         # The state already had a node in Open, but maybe we found a better way

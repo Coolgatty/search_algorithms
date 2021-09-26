@@ -192,8 +192,8 @@ def test_single_box_and_goal():
             "SokobanMisplacedBoxes": 1,
             "SokobanDiscreteMetric": 1,
             "Heuristic": 0,
-            
         }
+
 
 def test_heuristic_multi_goal():
     metaproblems = [
@@ -258,6 +258,7 @@ def test_heuristic_multi_goal_with_box_1():
                     "SokobanDiscreteMetric": 1,
                     "Heuristic": 0,
                 }
+
 
 def test_heuristic_multi_goal_with_box_2():
     metaproblems = [
@@ -324,6 +325,7 @@ def test_heuristic_multi_goal_with_box_3():
                     "Heuristic": 0,
                 }
 
+
 def test_heuristic_multi_goal_with_box_4():
     metaproblems = [
         SokobanMetaProblem(
@@ -354,6 +356,7 @@ def test_heuristic_multi_goal_with_box_4():
                     "SokobanDiscreteMetric": 1,
                     "Heuristic": 0,
                 }
+
 
 def test_heuristic_multi_goal_with_box_5():
     metaproblems = [
@@ -387,6 +390,7 @@ def test_heuristic_multi_goal_with_box_5():
                     "Heuristic": 0,
                 }
 
+
 def test_heuristic_multi_box():
     metaproblems = [
         SokobanMetaProblem(
@@ -418,6 +422,7 @@ def test_heuristic_multi_box():
                     "Heuristic": 0,
                 }
 
+
 def test_heuristics_optimal_multi_box():
     metaproblem = SokobanMetaProblem(
         [
@@ -435,7 +440,7 @@ def test_heuristics_optimal_multi_box():
     # There's a solution
     assert goal_node is not None
     # This is not so easy
-    #assert 10 < bfs.expansions < 40
+    # assert 10 < bfs.expansions < 40
 
     # We can get its path
     path = goal_node.path(problem.space)

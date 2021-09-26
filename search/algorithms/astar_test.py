@@ -7,12 +7,16 @@ from typing import Optional
 import pytest  # type: ignore
 
 from search.algorithms.astar import AStar
-from search.algorithms.search import Node, SearchAlgorithm
-from search.problems.grid.board2d import Grid2D, Grid2DMetaProblem
+from search.algorithms.search import Node, HeuristicSearchAlgorithm
+from search.problems.grid.board2d import (
+    Grid2D,
+    Grid2DManhattanDistance,
+    Grid2DMetaProblem,
+)
 from search.space import Problem
 
 
-@pytest.mark.skip(reason="AStar is not implemented yet.")
+# @pytest.mark.skip(reason="AStar is not implemented yet.")
 def test_no_solution():
     metaproblem = Grid2DMetaProblem(
         [
@@ -25,8 +29,8 @@ def test_no_solution():
         ]
     )
     problem: Problem = next(iter(metaproblem.multi_goal_given()))
-    # heuristic = Grid2DManhattanDistance(problem)
-    astar: SearchAlgorithm = AStar(problem)
+    heuristic = Grid2DManhattanDistance(problem)
+    astar: HeuristicSearchAlgorithm = AStar(problem, heuristic)
 
     # Search
     goal_node: Optional[Node] = astar.search()
@@ -38,7 +42,7 @@ def test_no_solution():
     assert 10_000 < astar.time_ns < 10_000_000
 
 
-@pytest.mark.skip(reason="AStar is not implemented yet.")
+# @pytest.mark.skip(reason="AStar is not implemented yet.")
 def test_expansion_order():
     length = 100
     metaproblems = [
@@ -57,8 +61,8 @@ def test_expansion_order():
     # pylint: disable=invalid-name
     for mp in metaproblems:
         problem: Problem = next(iter(mp.multi_goal_given()))
-        # heuristic = Grid2DManhattanDistance(problem)
-        astar: SearchAlgorithm = AStar(problem)
+        heuristic = Grid2DManhattanDistance(problem)
+        astar: HeuristicSearchAlgorithm = AStar(problem, heuristic)
 
         # Search
         goal_node: Optional[Node] = astar.search()
@@ -75,17 +79,17 @@ def test_expansion_order():
         assert astar.nodes_updated == 0  # The graph becomes a "tree" with Closed :/
 
 
-@pytest.mark.skip(reason="AStar with tie-breaking is not implemented yet.")
+# @pytest.mark.skip(reason="AStar with tie-breaking is not implemented yet.")
 def test_tie_breaking():
     state = Grid2D.State((0, 0))
 
     # pylint: disable=invalid-name
-    # f = 5
+    f = 5
     g1 = 3
-    # h1 = f - g1
-    node_1 = AStar.AStarNode(state, action=None, parent=None, g=g1)
+    h1 = f - g1
+    node_1 = AStar.AStarNode(state, action=None, parent=None, g=g1, h=h1)
     g2 = 2
-    # h2 = f - g2
-    node_2 = AStar.AStarNode(state, action=None, parent=None, g=g2)
+    h2 = f - g2
+    node_2 = AStar.AStarNode(state, action=None, parent=None, g=g2, h=h2)
 
     assert node_1 < node_2
